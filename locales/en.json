@@ -10,16 +10,16 @@
 	"front_left": "Front Left",
 	"hood": "Hood",
 	"driver": "Driver",
-	"co_driver": "Co-driver",
+	"co_driver": "Front Passenger",
 	"extras": "Extras",
 	"doors": "Doors",
 	"windows": "Windows",
 	"liveries": "Liveries",
-	"shuff": "Shuff",
+	"shuff": "Shuffle",
 	"vehicle_radial_label": "Vehicle",
 	"extra": "Extra",
-	"actived": "was activated!",
-	"deactived": "was deactivated!",
-	"not_exist_on_car": "doesn't exist on this car!!!",
-	"not_available_this_vehicle": "are not available for this vehicle!"
+	"actived": " was activated!",
+	"deactived": " was deactivated!",
+	"not_exist_on_car": " doesn't exist on this car!",
+	"not_available_this_vehicle": " is not available for this vehicle!"
 }

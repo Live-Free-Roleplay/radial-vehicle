@@ -4,8 +4,7 @@ local windows = { true, true, true, true }
 
 local function viewLiveries()
     if not cache.vehicle then
-        return lib.notify({ title = locale('liveries'), description = locale('not_in_vehicle'), type = 'error',
-            position = 'top', icon = 'ban' })
+        return lib.notify({ title = locale('liveries'), description = locale('not_in_vehicle'), type = 'error', icon = 'ban' })
     end
 
     TriggerEvent('getLiveries')
@@ -47,8 +46,7 @@ AddEventHandler('getLiveries', function()
     end
 
     if count == 0 then
-        return lib.notify({ title = locale('liveries'), description = locale('no_liveries_found'), type = 'error',
-            position = 'top', icon = 'ban' })
+        return lib.notify({ title = locale('liveries'), description = locale('no_liveries_found'), type = 'error', icon = 'ban' })
     end
 
     lib.registerContext(
@@ -203,7 +201,7 @@ lib.registerRadial({
 lib.registerRadial({
     id = 'vehicle_menu',
     items = {
-        {
+        --[[{
             label = locale("extras"),
             icon = 'note-sticky',
             menu = 'extras'
@@ -214,7 +212,7 @@ lib.registerRadial({
             onSelect = function()
                 viewLiveries()
             end
-        },
+        },--]]
         {
             label = 'Motor',
             icon = 'power-off',
@@ -495,12 +493,12 @@ function toggleLivery(vehicle, livery)
     local items, count = {}, 0
     if SetVehicleLivery(vehicle, livery) then
         lib.notify({
-            description = 'Dal sis novou livery s číslem '..livery,
+            description = 'Activated livery '..livery,
             type = 'success'
         })
         if not SetVehicleLivery(vehicle, livery) then
             lib.notify({
-                description = locale("Livery number") .. livery .. locale("not_exist_on_car"),
+                description = "Livery " .. livery .. locale("not_exist_on_car"),
                 type = 'error'
             })
         end
@@ -516,7 +514,7 @@ function setExtra(vehicle, extra)
             SetVehicleEngineHealth(vehicle, enginehealth)
             SetVehicleBodyHealth(vehicle, bodydamage)
             lib.notify({
-                description = locale("extra") .. extra .. locale("deactived"),
+                description = locale("extra") .. " " .. extra .. locale("deactived"),
                 type = 'error'
             })
         else
@@ -526,13 +524,13 @@ function setExtra(vehicle, extra)
             SetVehicleEngineHealth(vehicle, enginehealth)
             SetVehicleBodyHealth(vehicle, bodydamage)
             lib.notify({
-                description = locale("extra") .. extra .. locale("actived"),
+                description = locale("extra") .. " " .. extra .. locale("actived"),
                 type = 'success'
             })
         end
     else
         lib.notify({
-            description = locale("extra") .. extra .. locale("not_available_this_vehicle"),
+            description = locale("extra") .. " " .. extra .. locale("not_available_this_vehicle"),
             type = 'error'
         })
     end

@@ -9,6 +9,7 @@ lua54 'yes'
 shared_scripts {
     '@ox_lib/init.lua',
     'shared/*.lua',
+    '@es_extended/imports.lua'
 }
 
 client_scripts {

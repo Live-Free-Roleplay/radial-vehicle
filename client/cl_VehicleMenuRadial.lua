@@ -1,3 +1,4 @@
+ESX = exports["es_extended"]:getSharedObject()
 lib.locale()
 
 local windows = { true, true, true, true }
@@ -198,21 +199,51 @@ lib.registerRadial({
     }
 })
 
+local inVehicle = false
+lib.onCache('vehicle', function(value)
+    if value then
+        inVehicle = true
+    else
+        inVehicle = false
+    end
+    UpdateVehicleRadial()
+end)
+
+RegisterNetEvent('esx:setJob', function(job, lastJob)
+	Wait(500)
+	UpdateVehicleRadial()
+end)
+
+function UpdateVehicleRadial()
+	if inVehicle then
+        local jobName = ESX.PlayerData.job.name
+        if jobName == 'police' or jobName == 'sheriff' or jobName == 'ambulance' then
+            lib.addRadialItem({
+                {
+                    id = 'vehicle',
+                    label = locale("vehicle_radial_label"),
+                    icon = 'car',
+                    menu = 'vehicle_menu_emergency'
+                }
+            })
+        else
+            lib.addRadialItem({
+                {
+                    id = 'vehicle',
+                    label = locale("vehicle_radial_label"),
+                    icon = 'car',
+                    menu = 'vehicle_menu'
+                }
+            })
+        end
+    else
+        lib.removeRadialItem('vehicle')
+    end
+end
+
 lib.registerRadial({
     id = 'vehicle_menu',
     items = {
-        --[[{
-            label = locale("extras"),
-            icon = 'note-sticky',
-            menu = 'extras'
-        },
-        {
-            label = locale("liveries"),
-            icon = 'note-sticky',
-            onSelect = function()
-                viewLiveries()
-            end
-        },--]]
         {
             label = 'Motor',
             icon = 'power-off',
@@ -246,20 +277,53 @@ lib.registerRadial({
     }
 })
 
-lib.onCache('vehicle', function(value)
-    if value then
-        lib.addRadialItem({
-            {
-                id = 'vehicle',
-                label = locale("vehicle_radial_label"),
-                icon = 'car',
-                menu = 'vehicle_menu'
-            }
-        })
-    else
-        lib.removeRadialItem('vehicle')
-    end
-end)
+lib.registerRadial({
+    id = 'vehicle_menu_emergency',
+    items = {
+        {
+            label = locale("extras"),
+            icon = 'note-sticky',
+            menu = 'extras'
+        },
+        {
+            label = locale("liveries"),
+            icon = 'note-sticky',
+            onSelect = function()
+                viewLiveries()
+            end
+        },
+        {
+            label = 'Motor',
+            icon = 'power-off',
+            onSelect = function()
+                if cache.vehicle then
+                    local engineRunning = GetIsVehicleEngineRunning(cache.vehicle)
+
+                    if engineRunning then
+                        SetVehicleEngineOn(cache.vehicle, false, true, true)
+                    else
+                        SetVehicleEngineOn(cache.vehicle, true, true, true)
+                    end
+                end
+            end
+        },
+        {
+            label = locale("doors"),
+            icon = 'car-side',
+            menu = 'car_doors'
+        },
+        {
+            label = locale("windows"),
+            icon = 'car-side',
+            menu = 'car_windows'
+        },
+        {
+            label = locale("shuff"),
+            icon = 'car-side',
+            menu = 'car_seats'
+        },
+    }
+})
 
 lib.registerRadial({
     id = 'extras',

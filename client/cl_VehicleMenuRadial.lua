@@ -200,11 +200,14 @@ lib.registerRadial({
 })
 
 local inVehicle = false
+local curVehicle = nil
 lib.onCache('vehicle', function(value)
     if value then
         inVehicle = true
+        curVehicle = value
     else
         inVehicle = false
+        curVehicle = nil
     end
     UpdateVehicleRadial()
 end)
@@ -217,7 +220,7 @@ end)
 function UpdateVehicleRadial()
 	if inVehicle then
         local jobName = ESX.PlayerData.job.name
-        if jobName == 'police' or jobName == 'sheriff' or jobName == 'ambulance' then
+        if curVehicle and GetVehicleClass(curVehicle) == 18 and jobName == 'police' or jobName == 'sheriff' or jobName == 'ambulance' then
             lib.addRadialItem({
                 {
                     id = 'vehicle',
@@ -248,7 +251,7 @@ lib.registerRadial({
             label = 'Motor',
             icon = 'power-off',
             onSelect = function()
-                if cache.vehicle then
+                --[[if cache.vehicle then
                     local engineRunning = GetIsVehicleEngineRunning(cache.vehicle)
 
                     if engineRunning then
@@ -256,7 +259,8 @@ lib.registerRadial({
                     else
                         SetVehicleEngineOn(cache.vehicle, true, true, true)
                     end
-                end
+                end--]]
+                TriggerEvent('engine-toggle:Engine')
             end
         },
         {
@@ -296,7 +300,7 @@ lib.registerRadial({
             label = 'Motor',
             icon = 'power-off',
             onSelect = function()
-                if cache.vehicle then
+                --[[if cache.vehicle then
                     local engineRunning = GetIsVehicleEngineRunning(cache.vehicle)
 
                     if engineRunning then
@@ -304,7 +308,8 @@ lib.registerRadial({
                     else
                         SetVehicleEngineOn(cache.vehicle, true, true, true)
                     end
-                end
+                end--]]
+                TriggerEvent('engine-toggle:Engine')
             end
         },
         {
@@ -551,6 +556,32 @@ lib.registerRadial({
         },
     }
 })
+
+local function switchSeat(_, args)
+    local seatIndex = tonumber(args[1]) - 1
+
+    if seatIndex < -1 or seatIndex >= 4 then
+        lib.notify({
+            description = "Invalid seat requested",
+            type = 'error'
+        })
+    else
+        changeSeat(seatIndex)
+    end
+end
+
+local function shuffleSeat()
+    changeSeat(-1)
+end
+
+RegisterCommand("seat", switchSeat)
+RegisterCommand("shuff", shuffleSeat)
+RegisterCommand("shuffle", shuffleSeat)
+
+TriggerEvent('chat:addSuggestion', '/shuff', "Switch to the driver's seat")
+TriggerEvent('chat:addSuggestion', '/shuffle', "Switch to the driver's seat")
+TriggerEvent('chat:addSuggestion', '/seat', 'Switch seats in the current vehicle',
+  { { name = 'seat', help = "Switch seats in the current vehicle. 0 = driver, 1 = passenger, 2-3 = back seats" } })
 
 function toggleLivery(vehicle, livery)
     local numLiveries = GetVehicleLiveryCount(vehicle)

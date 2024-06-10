@@ -560,7 +560,12 @@ lib.registerRadial({
 local function switchSeat(_, args)
     local seatIndex = tonumber(args[1]) - 1
 
-    if seatIndex < -1 or seatIndex >= 4 then
+    if exports.wasabi_police:IsHandcuffed() then
+        lib.notify({
+            description = "You can't do that while handcuffed",
+            type = 'error'
+        })
+    elseif seatIndex < -1 or seatIndex >= 4	then
         lib.notify({
             description = "Invalid seat requested",
             type = 'error'
@@ -571,7 +576,14 @@ local function switchSeat(_, args)
 end
 
 local function shuffleSeat()
-    changeSeat(-1)
+    if exports.wasabi_police:IsHandcuffed() then
+        lib.notify({
+            description = "You can't do that while handcuffed",
+            type = 'error'
+        })
+    else
+        changeSeat(-1)
+    end
 end
 
 RegisterCommand("seat", switchSeat)
@@ -640,7 +652,12 @@ function doorToggle(door)
 end
 
 function changeSeat(seat) -- Check seat is empty and move to it
-    if (IsVehicleSeatFree(cache.vehicle, seat)) then
+    if exports.wasabi_police:IsHandcuffed() then
+        lib.notify({
+            description = "You can't do that while handcuffed",
+            type = 'error'
+        })
+    elseif (IsVehicleSeatFree(cache.vehicle, seat)) then
         SetPedIntoVehicle(cache.ped, cache.vehicle, seat)
     end
 end
